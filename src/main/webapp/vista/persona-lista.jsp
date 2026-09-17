@@ -1,16 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.List" %>
-<%@ page import="modelo.vo.PersonaVO" %>
-<%
-    String baseURL = request.getContextPath();
-    List<PersonaVO> listaPersonas = (List<PersonaVO>) request.getAttribute("personas");
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <title>Listado de Personas</title>
-    <link rel="stylesheet" href="<%= baseURL %>/css/styles.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css" />
   </head>
   <body>
     <div class="page-container">
@@ -24,37 +19,56 @@
               <th>Nombre</th>
               <th>Sueldo</th>
               <th>Email</th>
+              <th>Categoria</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <%
-              if (listaPersonas != null && !listaPersonas.isEmpty()) {
-                for (PersonaVO p : listaPersonas) {
-            %>
-            <tr>
-              <td><%= p.getCodigo() %></td>
-              <td><%= p.getNombre() %></td>
-              <td><%= p.getSueldo() %></td>
-              <td><%= p.getEmail() %></td>
-              <td class="actions">
-                <button disabled class="btn-disabled" title="Funcionalidad no disponible">Editar</button>
-                <button disabled class="btn-disabled" title="Funcionalidad no disponible">Eliminar</button>
-              </td>
-            </tr>
-            <% } } else { %>
-            <tr>
-              <td colspan="5" style="text-align: center; color: #6b7280">
-                No hay personas registradas
-              </td>
-            </tr>
-            <% } %>
+            <c:if test="${not empty requestScope.personas}">
+              <c:forEach var="p" items="${requestScope.personas}">
+                <tr>
+                  <td>${p.codigo}</td>
+                  <td>${p.nombre}</td>
+                  <td>${p.sueldo}</td>
+                  <td>${p.email}</td>
+                  <td>${p.cateforia}</td>
+                  <td class="actions">
+                    <!-- Botón Editar deshabilitado -->
+                    <button
+                      disabled
+                      class="btn-disabled"
+                      title="Funcionalidad no disponible"
+                    >
+                      Editar
+                    </button>
+
+                    <!-- Botón Eliminar deshabilitado -->
+                    <button
+                      disabled
+                      class="btn-disabled"
+                      title="Funcionalidad no disponible"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </c:forEach>
+            </c:if>
+            <c:if test="${empty requestScope.personas}">
+              <tr>
+                <td colspan="3" style="text-align: center; color: #6b7280">
+                  No hay personas registradas
+                </td>
+              </tr>
+            </c:if>
           </tbody>
         </table>
       </div>
 
       <div class="section-gap">
-        <a class="btn" href="<%= baseURL %>/persona?action=agregar">Agregar Persona</a>
+        <a class="btn" href="${pageContext.request.contextPath}/persona?action=agregar"
+          >Agregar Persona</a
+        >
       </div>
     </div>
   </body>
