@@ -23,9 +23,9 @@ public class PersonaControladorServlet extends HttpServlet {
 
         switch (action) {
             case "agregar": // mostrar formulario de alta (GET)
-                request.getRequestDispatcher("/vista/persona-form.jsp")
+                request.getRequestDispatcher("/WEB-INF/vista/persona-form.jsp")
                         .forward(request, response);
-                break;
+            break;
 
             case "listar": // listar explícito
                 listar(request, response);
@@ -63,16 +63,17 @@ public class PersonaControladorServlet extends HttpServlet {
             throws IOException {
         int codigo = Integer.parseInt(request.getParameter("codigo"));
         String nombre = request.getParameter("nombre");
-        double sueldo = Double.parseDouble(request.getParameter("sueldo"));
         String email = request.getParameter("email");
-        dao.agregar(new PersonaVO(codigo, nombre, sueldo, email));
+        String categoria = request.getParameter("categoria");
+        double sueldo = Double.parseDouble(request.getParameter("sueldo"));
+        dao.agregar(new PersonaVO(codigo, nombre, sueldo, email, categoria));
         response.sendRedirect(request.getContextPath() + "/persona"); // PRG → listar
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("personas", dao.getLista());
-        request.getRequestDispatcher("/vista/persona-lista.jsp")
+        request.getRequestDispatcher("/WEB-INF/vista/persona-lista.jsp")
                 .forward(request, response);
     }
 }
